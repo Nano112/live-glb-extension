@@ -1,0 +1,94 @@
+{
+  "name": "live-glb-extension",
+  "displayName": "Live GLB Viewer",
+  "description": "Hot-reloading GLB viewer with animated-texture support. No webserver, no polling.",
+  "version": "0.1.0",
+  "publisher": "Nano112",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nano112/live-glb-extension.git"
+  },
+  "icon": "media/icon.png",
+  "categories": ["Visualization", "Other"],
+  "keywords": ["glb", "gltf", "3d", "viewer", "three.js", "minecraft"],
+  "engines": { "vscode": "^1.85.0" },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "workspaceContains:**/*.glb"
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "liveGlb.open", "title": "Live GLB: Open Viewer" }
+    ],
+    "customEditors": [
+      {
+        "viewType": "liveGlb.viewer",
+        "displayName": "Live GLB Viewer",
+        "selector": [{ "filenamePattern": "*.glb" }],
+        "priority": "default"
+      }
+    ],
+    "configuration": {
+      "title": "Live GLB Viewer",
+      "properties": {
+        "liveGlb.backgroundColor": {
+          "type": "string",
+          "default": "",
+          "description": "Background color (CSS hex, e.g. '#1a1a2e'). Empty = match VSCode editor background."
+        },
+        "liveGlb.gridEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show ground grid by default."
+        },
+        "liveGlb.gridSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Grid extent in world units."
+        },
+        "liveGlb.axesEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show XYZ axes helper by default."
+        },
+        "liveGlb.statsEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show FPS / draw-call stats overlay by default."
+        },
+        "liveGlb.tickMs": {
+          "type": "number",
+          "default": 50,
+          "description": "Animated-texture tick duration in ms (Minecraft = 50)."
+        },
+        "liveGlb.autoFrameOnReload": {
+          "type": "boolean",
+          "default": false,
+          "description": "Re-frame the camera every reload. Off = preserve user camera."
+        },
+        "liveGlb.excludeGlobs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["**/node_modules/**", "**/.git/**", "**/dist/**", "**/out/**"],
+          "description": "Glob patterns to exclude when scanning the workspace for GLB files."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "watch": "node esbuild.config.js --watch",
+    "typecheck": "tsc --noEmit -p .",
+    "package": "vsce package",
+    "vscode:prepublish": "node esbuild.config.js --production"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/three": "^0.184.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.28.0",
+    "three": "^0.184.0",
+    "typescript": "^5.4.0"
+  }
+}
